@@ -1,4 +1,5 @@
 import {drizzle} from 'drizzle-orm/d1'
+import { Customers } from '../db/schema'
 
 // cloudflare worker
 export interface Env {
@@ -28,7 +29,19 @@ export interface Env {
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const { pathname, searchParams } = new URL(request.url)
-		const db = drizzle(env.DB)
+		if(pathname == '/api/queryCustomers') {
+			const db = drizzle(env.DB)
+			const results = await db.select().from(Customers)
+			return new Response(JSON.stringify(results))
+		}
+		if(pathname == '/api/createCustomer') {
+			const db = drizzle(env.DB)
+			const result = await db.insert(Customers).values({
+				CompanyName: '夜语工作室1',
+				ContactName: '夜雨1'
+			}).returning({CustomerId: Customers.CustomerId})
+			return Response.json(result)
+		}
 		return new Response("查询失败")
 	},
 } satisfies ExportedHandler<Env>;
