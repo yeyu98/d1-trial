@@ -14,7 +14,8 @@
 		{
 			"binding": "DB",
 			"database_name": "prod-d1-tutorial",
-			"database_id": "d1-trial"
+			"database_id": "d1-trial",
+			"migrations_dir": "./drizzle"
 		}
 	]
 }
